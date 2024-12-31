@@ -1,10 +1,11 @@
 import React, { useContext} from "react";
 import classes from "./index.module.css";
-
 import cx from "classnames";
 import { LuRectangleHorizontal } from "react-icons/lu";
 import { FaSlash } from "react-icons/fa";
 import boardContext from "../../store/board-context";
+
+
 const ToolBar = () => {
   const {activeToolItem,handleToolItemClick}=useContext(boardContext);
 

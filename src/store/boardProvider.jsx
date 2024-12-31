@@ -1,26 +1,25 @@
 import React, { act, useState } from "react";
 import { TOOL_ITEMS } from "../../constants";
+import boardContext from "./board-context";
+const BoardProvider = ({ children }) => {
+  const [activeToolItem, setActiveToolItem] = useState(TOOL_ITEMS.LINE);
 
-const boardProvider = ({ children }) => {
+  const handleToolItemClick = ( tool ) => {
+    //console.log(tool);
+    setActiveToolItem(tool);
+  };
 
-    const [activeToolItem,setActiveToolItem]=useState(TOOL_ITEMS.LINE);
-
-    const handleToolItemClick=(tool)=>{
-        setActiveToolItem(tool);
-    }
-
-    //OBJECT USED BY ALL CONSUMERS OF THIS CONTEXT
-    const boardContextValue={
-        activeToolItem,
-        handleToolItemClick,
-    };
+  //OBJECT USED BY ALL CONSUMERS OF THIS CONTEXT
+  const boardContextValue = {
+    activeToolItem,
+    handleToolItemClick,
+  };
 
   return (
-    <boardContext.Provider
-      value={boardContextValue}>
+    <boardContext.Provider value={boardContextValue}>
       {children}
     </boardContext.Provider>
   );
 };
 
-export default boardProvider;
+export default BoardProvider;
