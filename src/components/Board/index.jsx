@@ -25,11 +25,19 @@ function Board() {
     roughCanvas.draw(rect1);
     roughCanvas.draw(rect2);
 
-    // Optional: Log to see if everything is working fine
-    console.log('Shapes drawn');
+   // console.log('Shapes drawn');
   }, []);
 
-  return <canvas ref={canvasRef} />
+  const handleBoardMouseDown=(event)=>{
+    //get the x and y coordinate of the click of the mouse
+    const clientX=event.clientX;
+    const clientY=event.clientY;
+
+    console.log(clientX,clientY);
+    
+  }
+
+  return <canvas ref={canvasRef} onClick={handleBoardMouseDown}/>
 }
 
 export default Board;
