@@ -4,6 +4,7 @@ import cx from "classnames";
 import { LuRectangleHorizontal } from "react-icons/lu";
 import { FaSlash } from "react-icons/fa";
 import boardContext from "../../store/board-context";
+import { TOOL_ITEMS } from "../../../constants";
 
 
 const ToolBar = () => {
@@ -13,17 +14,17 @@ const ToolBar = () => {
     <div className={classes.container}>
       <div
         className={cx(classes.toolItem, {
-          [classes.active]: activeToolItem === "A",
+          [classes.active]: activeToolItem ===TOOL_ITEMS.LINE,
         })}
-        onClick={()=>handleToolItemClick("A")}
+        onClick={()=>handleToolItemClick(TOOL_ITEMS.LINE)}
         >
         <FaSlash/>
       </div>
       <div
         className={cx(classes.toolItem, {
-          [classes.active]: activeToolItem === "B",
+          [classes.active]: activeToolItem === TOOL_ITEMS.RECTANGLE,
         })}
-        onClick={()=>handleToolItemClick("B")}
+        onClick={()=>handleToolItemClick(TOOL_ITEMS.RECTANGLE)}
         >
         <LuRectangleHorizontal />
       </div>

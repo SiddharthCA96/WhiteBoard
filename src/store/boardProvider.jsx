@@ -1,5 +1,5 @@
 import React, { useReducer } from "react";
-import { TOOL_ITEMS } from "../../constants";
+import { BOARD_ACTIONS, TOOL_ACTIONS_TYPES, TOOL_ITEMS } from "../../constants";
 import boardContext from "./board-context";
 import rough from "roughjs/bin/rough";
 
@@ -8,30 +8,65 @@ const gen = rough.generator();
 //board reducer
 const boardReducer = (state, action) => {
   switch (action.type) {
-    case "CHANGE_TOOL":
+    case "CHANGE_TOOL": {
       return {
         ...state,
         activeToolItem: action.payload.tool,
       };
-    case "DRAW_DOWN":
-        //get the payload
-        const {clientX,clientY}=action.payload
-        //create the new element
-        const newEle ={
-            id:state.elements.length,
-            x1:clientX,
-            y1:clientY,
-            x2:clientX,
-            y2:clientY,
-            roughEle:gen.line(clientX,clientY,clientX,clientY),
-        };
-        //push this element to state elements
-        const prevElements=state.elements;
+    }
+    case "DRAW_DOWN": {
+      //get the payload
+      const { clientX, clientY } = action.payload;
+      //create the new element
+      const newEle = {
+        id: state.elements.length,
+        x1: clientX,
+        y1: clientY,
+        x2: clientX,
+        y2: clientY,
+        roughEle: gen.line(clientX, clientY, clientX, clientY),
+      };
+      //push this element to state elements
+      const prevElements = state.elements;
+      return {
+        //updating the state
+        ...state,
+        //Declare the toolaction type
+        toolActionType: TOOL_ACTIONS_TYPES.DRAWING,
+        //update the elements
+        elements: [...prevElements, newEle],
+      };
+    }
+    case "DRAW_MOVE": {
+      //get the payload
+      const { clientX, clientY } = action.payload;
+
+      //get the prev elements
+      const newElements = [...state.elements];
+      const index = state.elements.length - 1;
+
+      //set the last point of the line (i.e) the last element in elements
+      newElements[index].x2 = clientX;
+      newElements[index].y2 = clientY;
+
+      //generate the roughEle corresponding to this point
+      newElements[index].roughEle = gen.line(
+        newElements[index].x1,
+        newElements[index].y1,
+        clientX,
+        clientY
+      );
+      return {
+        ...state,
+        elements: newElements,
+      };
+    }
+    case "DRAW_UP":{
         return{
-            //updating the state
             ...state,
-            elements:[...prevElements,newEle]
+            toolActionType:TOOL_ACTIONS_TYPES.NONE,
         }
+    }
     default:
       return state;
   }
@@ -40,6 +75,7 @@ const boardReducer = (state, action) => {
 //initial state of the board
 const initialBoardState = {
   activeToolItem: TOOL_ITEMS.LINE,
+  toolActionType: TOOL_ACTIONS_TYPES.NONE,
   elements: [],
 };
 const BoardProvider = ({ children }) => {
@@ -54,11 +90,31 @@ const BoardProvider = ({ children }) => {
     const { clientX, clientY } = event;
     //dispatch th action to change the state of the elements
     dispatchBoardAction({
-      type: "DRAW_DOWN",
+      type: BOARD_ACTIONS.DRAW_DOWN,
       payload: {
         clientX,
         clientY,
       },
+    });
+  };
+
+  const boardMouseMoveHandler = (event) => {
+    const { clientX, clientY } = event;
+    //dispatch th action to change the state of the elements
+    dispatchBoardAction({
+      type: BOARD_ACTIONS.DRAW_MOVE,
+      payload: {
+        clientX,
+        clientY,
+      },
+    });
+  };
+
+  //just change the toolaction type to none
+  const boardMouseUpHandler = () => {
+    //dispatch th action to change the state of the elements
+    dispatchBoardAction({
+      type: BOARD_ACTIONS.DRAW_UP,
     });
   };
 
@@ -75,9 +131,12 @@ const BoardProvider = ({ children }) => {
   //OBJECT USED BY ALL CONSUMERS OF THIS CONTEXT
   const boardContextValue = {
     activeToolItem: boardState.activeToolItem,
-    elements: boardContext.elements,
+    elements: boardState.elements,
+    toolActionType: boardState.toolActionType,
     handleToolItemClick,
     boardMouseDownHandler,
+    boardMouseMoveHandler,
+    boardMouseUpHandler,
   };
 
   return (
