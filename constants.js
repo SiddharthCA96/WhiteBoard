@@ -7,3 +7,8 @@ export const TOOL_ITEMS = {
   ERASER: "ERASER",
   TEXT: "TEXT",
 };
+
+export const BOARD_ACTIONS={
+  CHANGE_TOOL: "CHANGE_TOOL",
+  DRAW_DOWN: "DRAW_DOWN",
+}

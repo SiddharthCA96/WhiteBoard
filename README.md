@@ -9,3 +9,6 @@
 - Configure Tailwind
 - Install classnames (https://www.npmjs.com/package/classnames)
 - Install react-icons
+- Create the store
+- Setup the boardprovider and boeardcontext 
+- Connect the store and the fuction(usereducer)

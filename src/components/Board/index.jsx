@@ -1,9 +1,9 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef,useContext } from "react";
 import rough from "roughjs";
-
+import boardContext from "../../store/board-context";
 function Board() {
   const canvasRef = useRef();
-
+  const { elements,boardMouseDownHandler } = useContext(boardContext);
   useEffect(() => {
     const canvas = canvasRef.current;
 
@@ -11,33 +11,36 @@ function Board() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
+    // console.log('Shapes drawn');
+  }, []);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const context=canvas.getContext("2d");
+    context.save();
     // Create the rough canvas context
     const roughCanvas = rough.canvas(canvas);
 
-    // Access the generator from roughCanvas
-    const generator = roughCanvas.generator;
 
-    // Generate two rectangles
-    const rect1 = generator.rectangle(10, 10, 100, 100, { fill: "red" });
-    const rect2 = generator.rectangle(10, 120, 100, 100, { fill: "blue" });
+    //draw all the element present in the board
+    // elements.forEach(element => {
+    //   roughCanvas.draw(element.roughEle);
+    // });
 
-    // Draw the rectangles on the roughCanvas
-    roughCanvas.draw(rect1);
-    roughCanvas.draw(rect2);
+    //clear the whole board 
+    return()=>{
+      context.clearRect(0,0,canvas.width,canvas.height);
+    }
+  }, [elements]);
 
-   // console.log('Shapes drawn');
-  }, []);
+  const handleBoardMouseDown = (event) => {
+    const {clientX, clientY}=event;
+    //calling the fcn responsible
+    boardMouseDownHandler(event);
+    console.log(clientX, clientY);
+  };
 
-  const handleBoardMouseDown=(event)=>{
-    //get the x and y coordinate of the click of the mouse
-    const clientX=event.clientX;
-    const clientY=event.clientY;
-
-    console.log(clientX,clientY);
-    
-  }
-
-  return <canvas ref={canvasRef} onClick={handleBoardMouseDown}/>
+  return <canvas ref={canvasRef} onClick={handleBoardMouseDown} />;
 }
 
 export default Board;
