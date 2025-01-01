@@ -14,3 +14,5 @@
 - Connect the store and the fuction(usereducer)
 - Generate the functionality of the line tool
 - Implement the rectangle tool functionality
+- Implement the Circle tool functionality
+- Implement the Arrow tool functionality
