@@ -16,3 +16,6 @@
 - Implement the rectangle tool functionality
 - Implement the Circle tool functionality
 - Implement the Arrow tool functionality
+- Create the toolbox provider and its context
+- Create the toolbox component
+- 
