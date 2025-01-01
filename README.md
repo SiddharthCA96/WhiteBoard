@@ -12,3 +12,5 @@
 - Create the store
 - Setup the boardprovider and boeardcontext 
 - Connect the store and the fuction(usereducer)
+- Generate the functionality of the line tool
+- Implement the rectangle tool functionality

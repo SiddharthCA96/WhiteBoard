@@ -2,6 +2,7 @@ import React, { useReducer } from "react";
 import { BOARD_ACTIONS, TOOL_ACTIONS_TYPES, TOOL_ITEMS } from "../../constants";
 import boardContext from "./board-context";
 import rough from "roughjs/bin/rough";
+import { createRoughElement } from "../utils/element";
 
 const gen = rough.generator();
 
@@ -18,14 +19,14 @@ const boardReducer = (state, action) => {
       //get the payload
       const { clientX, clientY } = action.payload;
       //create the new element
-      const newEle = {
-        id: state.elements.length,
-        x1: clientX,
-        y1: clientY,
-        x2: clientX,
-        y2: clientY,
-        roughEle: gen.line(clientX, clientY, clientX, clientY),
-      };
+      const newEle = createRoughElement(
+        state.elements.length,
+        clientX,
+        clientY,
+        clientX,
+        clientY,
+        { type: state.activeToolItem }
+      );
       //push this element to state elements
       const prevElements = state.elements;
       return {
@@ -44,28 +45,24 @@ const boardReducer = (state, action) => {
       //get the prev elements
       const newElements = [...state.elements];
       const index = state.elements.length - 1;
+      const { x1, y1 } = newElements[index];
 
-      //set the last point of the line (i.e) the last element in elements
-      newElements[index].x2 = clientX;
-      newElements[index].y2 = clientY;
+      //create the newelement
+      const newElement = createRoughElement(index, x1, y1, clientX, clientY, {
+        type: state.activeToolItem,
+      });
 
-      //generate the roughEle corresponding to this point
-      newElements[index].roughEle = gen.line(
-        newElements[index].x1,
-        newElements[index].y1,
-        clientX,
-        clientY
-      );
+      newElements[index]=newElement;
       return {
         ...state,
         elements: newElements,
       };
     }
-    case "DRAW_UP":{
-        return{
-            ...state,
-            toolActionType:TOOL_ACTIONS_TYPES.NONE,
-        }
+    case "DRAW_UP": {
+      return {
+        ...state,
+        toolActionType: TOOL_ACTIONS_TYPES.NONE,
+      };
     }
     default:
       return state;
