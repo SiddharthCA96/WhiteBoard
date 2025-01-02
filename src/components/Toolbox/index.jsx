@@ -7,16 +7,18 @@ import boardContext from "../../store/board-context";
 
 const ToolBox = () => {
   //get the current active toolitem
-  const { activeToolItem } = useContext(boardContext);
-  console.log(activeToolItem);
+  const { activeToolItem} = useContext(boardContext);
+  //console.log(activeToolItem);
   
   //get the active toolboxstate
-  const { toolboxState } = useContext(toolboxContext);
-  console.log(toolboxState);
+  const { toolboxState,changeStroke  } = useContext(toolboxContext);
+  //console.log(toolboxState);
   
   const strokeColor = toolboxState[activeToolItem]?.stroke;
   console.log(strokeColor);
   
+
+
   return (
     <div className={classes.container}>
       <div className={classes.selectOptionContainer}>
@@ -31,6 +33,7 @@ const ToolBox = () => {
                   { [classes.activeColorBox]: strokeColor === COLORS[k] }))
                 }
                 style={{ backgroundColor: COLORS[k] }}
+                onClick={()=>changeStroke(activeToolItem,COLORS[k])}
               />
             );
           })}
