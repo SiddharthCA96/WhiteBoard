@@ -1,5 +1,5 @@
 import { useEffect, useRef, useContext, useLayoutEffect } from "react";
-import { TOOL_ACTIONS_TYPES } from "../../../constants";
+import { TOOL_ACTIONS_TYPES, TOOL_ITEMS } from "../../../constants";
 import rough from "roughjs";
 import boardContext from "../../store/board-context";
 import toolboxContext from "../../store/ToolBoxContext";
@@ -13,8 +13,8 @@ function Board() {
     toolActionType,
   } = useContext(boardContext);
 
-    //get the toolboxstate to use it
-  const {toolboxState}=useContext(toolboxContext);
+  //get the toolboxstate to use it
+  const { toolboxState } = useContext(toolboxContext);
   useEffect(() => {
     const canvas = canvasRef.current;
 
@@ -35,14 +35,29 @@ function Board() {
 
     // Draw elements
     elements.forEach((element) => {
-      roughCanvas.draw(element.roughEle);
+      switch (element.type) {
+        case TOOL_ITEMS.LINE:
+        case TOOL_ITEMS.RECTANGLE:
+        case TOOL_ITEMS.CIRCLE:
+        case TOOL_ITEMS.ARROW:
+          roughCanvas.draw(element.roughEle);
+          break;
+        case TOOL_ITEMS.BRUSH: {
+          context.fillStyle = element.stroke;
+          context.fill(element.path);
+          context.restore();
+          break;
+        }
+        default:
+          throw new Error("Type not recognised");
+      }
     });
   }, [elements]);
 
   const handleMouseDown = (event) => {
     const { clientX, clientY } = event;
     //calling the fcn responsible
-    boardMouseDownHandler(event,toolboxState);
+    boardMouseDownHandler(event, toolboxState);
     console.log(clientX, clientY);
   };
   const handleMouseMove = (event) => {
@@ -54,9 +69,9 @@ function Board() {
     }
   };
 
-  const handleMouseUp=()=>{
+  const handleMouseUp = () => {
     boardMouseUpHandler();
-  }
+  };
 
   return (
     <canvas

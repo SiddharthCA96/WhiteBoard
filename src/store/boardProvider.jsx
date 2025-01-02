@@ -2,8 +2,8 @@ import React, { useReducer } from "react";
 import { BOARD_ACTIONS, TOOL_ACTIONS_TYPES, TOOL_ITEMS } from "../../constants";
 import boardContext from "./board-context";
 import rough from "roughjs/bin/rough";
-import { createRoughElement } from "../utils/element";
-
+import { createRoughElement, getSvgPathFromStroke } from "../utils/element";
+import getStroke from "perfect-freehand";
 const gen = rough.generator();
 
 //board reducer
@@ -17,7 +17,7 @@ const boardReducer = (state, action) => {
     }
     case "DRAW_DOWN": {
       //get the payload
-      const { clientX, clientY,stroke,fill,size } = action.payload;
+      const { clientX, clientY, stroke, fill, size } = action.payload;
       //create the new element
       const newEle = createRoughElement(
         state.elements.length,
@@ -25,7 +25,7 @@ const boardReducer = (state, action) => {
         clientY,
         clientX,
         clientY,
-        { type: state.activeToolItem,stroke,fill,size}
+        { type: state.activeToolItem, stroke, fill, size }
       );
       //push this element to state elements
       const prevElements = state.elements;
@@ -45,21 +45,49 @@ const boardReducer = (state, action) => {
       //get the prev elements
       const newElements = [...state.elements];
       const index = state.elements.length - 1;
-      const { x1, y1,stroke,fill,size} = newElements[index];
+      const { type } = newElements[index];
 
-      //create the newelement
-      const newElement = createRoughElement(index, x1, y1, clientX, clientY, {
-        type: state.activeToolItem,
-        stroke,
-        fill,
-        size,
-      });
-
-      newElements[index]=newElement;
-      return {
-        ...state,
-        elements: newElements,
-      };
+      //create the newelement based on type
+      switch (type) {
+        case TOOL_ITEMS.LINE:
+        case TOOL_ITEMS.RECTANGLE:
+        case TOOL_ITEMS.CIRCLE:
+        case TOOL_ITEMS.ARROW:
+          const { x1, y1, stroke, fill, size } = newElements[index];
+          const newElement = createRoughElement(
+            index,
+            x1,
+            y1,
+            clientX,
+            clientY,
+            {
+              type: state.activeToolItem,
+              stroke,
+              fill,
+              size,
+            }
+          );
+          newElements[index] = newElement;
+          return {
+            ...state,
+            elements: newElements,
+          };
+        case TOOL_ITEMS.BRUSH: {
+          newElements[index].points = [
+            ...newElements[index].points,
+            { x: clientX, y: clientY },
+          ];
+          newElements[index].path = new Path2D(
+            getSvgPathFromStroke(getStroke(newElements[index].points))
+          );
+          return {
+            ...state,
+            elements: newElements,
+          };
+        }
+        default:
+         throw new Error("Type not defined")
+      }
     }
     case "DRAW_UP": {
       return {
@@ -86,7 +114,7 @@ const BoardProvider = ({ children }) => {
   );
   //to set the elements (state of the element)
 
-  const boardMouseDownHandler = (event,toolboxState) => {
+  const boardMouseDownHandler = (event, toolboxState) => {
     const { clientX, clientY } = event;
     //dispatch th action to change the state of the elements
     dispatchBoardAction({
@@ -94,9 +122,9 @@ const BoardProvider = ({ children }) => {
       payload: {
         clientX,
         clientY,
-        stroke:toolboxState[boardState.activeToolItem]?.stroke,
-        fill:toolboxState[boardState.activeToolItem]?.fill,
-        size:toolboxState[boardState.activeToolItem]?.size,
+        stroke: toolboxState[boardState.activeToolItem]?.stroke,
+        fill: toolboxState[boardState.activeToolItem]?.fill,
+        size: toolboxState[boardState.activeToolItem]?.size,
       },
     });
   };

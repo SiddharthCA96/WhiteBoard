@@ -70,8 +70,6 @@ const ToolBox = () => {
           <div className={classes.toolBoxLabel}>Brush Size</div>
           <input
             type="range"
-            // min={activeToolItem === TOOL_ITEMS.TEXT ? 12 : 1}
-            // max={activeToolItem == TOOL_ITEMS.TEXT ? 64 : 1}
             step={1}
             min={1}
             max={10}
