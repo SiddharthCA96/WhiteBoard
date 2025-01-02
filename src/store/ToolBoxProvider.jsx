@@ -1,13 +1,18 @@
 import React, { useReducer } from "react";
 import toolboxContext from "./ToolBoxContext";
-import { COLORS, TOOL_ITEMS } from "../../constants";
+import { COLORS, TOOL_ITEMS, TOOLBOX_ACTIONS } from "../../constants";
 
 const toolboxReducer = (state, action) => {
   switch (action.type) {
-    case "CHANGE_STROKE": {
+    case TOOLBOX_ACTIONS.CHANGE_STROKE: {
       const newState = { ...state };
       newState[action.payload.tool].stroke = action.payload.stroke;
       return newState;
+    }
+    case TOOLBOX_ACTIONS.CHANGE_FILL:{
+        const newState={...state};
+        newState[action.payload.tool].fill=action.payload.fill;
+        return newState;
     }
     default:
       state;
@@ -21,17 +26,17 @@ const initialToolboxState = {
     size: 1,
   },
   [TOOL_ITEMS.RECTANGLE]: {
-    stoke: COLORS.BLACK,
+    stroke: COLORS.BLACK,
     fill: null,
     size: 1,
   },
   [TOOL_ITEMS.CIRCLE]: {
-    stoke: COLORS.BLACK,
+    stroke: COLORS.BLACK,
     fill: null,
     size: 1,
   },
   [TOOL_ITEMS.ARROW]: {
-    stoke: COLORS.BLACK,
+    stroke: COLORS.BLACK,
     size: 1,
   },
 };
@@ -45,16 +50,28 @@ const ToolBoxProvider = ({ children }) => {
   const changeStrokeHandler = (tool, stroke) => {
     //dispathc the action to change stroke color
     dispatchToolboxAction({
-      type: "CHANGE_STROKE",
+      type: TOOLBOX_ACTIONS.CHANGE_STROKE,
       payload: {
         tool,
         stroke,
       },
     });
   };
+  //function to handle the change in fill color
+  const changeFillHandler=(tool,fill)=>{
+    //dispatch the action to change fill color
+    dispatchToolboxAction({
+        type:TOOLBOX_ACTIONS.CHANGE_FILL,
+        payload:{
+            tool,
+            fill,
+        }
+    })
+  }
   const toolboxContextValue = {
     toolboxState,
     changeStroke: changeStrokeHandler,
+    changeFill:changeFillHandler,
   };
 
   return (
