@@ -17,7 +17,7 @@ const boardReducer = (state, action) => {
     }
     case "DRAW_DOWN": {
       //get the payload
-      const { clientX, clientY } = action.payload;
+      const { clientX, clientY,stroke,fill } = action.payload;
       //create the new element
       const newEle = createRoughElement(
         state.elements.length,
@@ -25,7 +25,7 @@ const boardReducer = (state, action) => {
         clientY,
         clientX,
         clientY,
-        { type: state.activeToolItem }
+        { type: state.activeToolItem,stroke,fill}
       );
       //push this element to state elements
       const prevElements = state.elements;
@@ -45,11 +45,13 @@ const boardReducer = (state, action) => {
       //get the prev elements
       const newElements = [...state.elements];
       const index = state.elements.length - 1;
-      const { x1, y1 } = newElements[index];
+      const { x1, y1,stroke,fill} = newElements[index];
 
       //create the newelement
       const newElement = createRoughElement(index, x1, y1, clientX, clientY, {
         type: state.activeToolItem,
+        stroke,
+        fill,
       });
 
       newElements[index]=newElement;
@@ -83,7 +85,7 @@ const BoardProvider = ({ children }) => {
   );
   //to set the elements (state of the element)
 
-  const boardMouseDownHandler = (event) => {
+  const boardMouseDownHandler = (event,toolboxState) => {
     const { clientX, clientY } = event;
     //dispatch th action to change the state of the elements
     dispatchBoardAction({
@@ -91,6 +93,8 @@ const BoardProvider = ({ children }) => {
       payload: {
         clientX,
         clientY,
+        stroke:toolboxState[boardState.activeToolItem]?.stroke,
+        fill:toolboxState[boardState.activeToolItem]?.fill,
       },
     });
   };

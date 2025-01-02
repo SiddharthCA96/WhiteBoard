@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import classes from "./index.module.css";
-import { COLORS, STROKE_TOOL_TYPES } from "../../../constants";
+import { COLORS, STROKE_TOOL_TYPES,FILL_TOOL_TYPES } from "../../../constants";
 import cx from "classnames";
 import toolboxContext from "../../store/ToolBoxContext";
 import boardContext from "../../store/board-context";
@@ -38,24 +38,25 @@ const ToolBox = () => {
         </div>
       )}
 
-      {/* Show the Fill Color option for all tools */}
-      <div className={classes.selectOptionContainer}>
-        <div className={classes.toolBoxLabel}>Fill Color</div>
-        <div className={classes.colorsContainer}>
-          {Object.keys(COLORS).map((k) => {
-            return (
-              <div
-                key={k}
-                className={cx(classes.colorBox, {
-                  [classes.activeColorBox]: fillColor === COLORS[k], // Apply active class if colors match
-                })}
-                style={{ backgroundColor: COLORS[k] }}
-                onClick={() => changeFill(activeToolItem, COLORS[k])}
-              />
-            );
-          })}
+      {FILL_TOOL_TYPES.includes(activeToolItem) && (
+        <div className={classes.selectOptionContainer}>
+          <div className={classes.toolBoxLabel}>Fill Color</div>
+          <div className={classes.colorsContainer}>
+            {Object.keys(COLORS).map((k) => {
+              return (
+                <div
+                  key={k}
+                  className={cx(classes.colorBox, {
+                    [classes.activeColorBox]: fillColor === COLORS[k], // Apply active class if colors match
+                  })}
+                  style={{ backgroundColor: COLORS[k] }}
+                  onClick={() => changeFill(activeToolItem, COLORS[k])}
+                />
+              );
+            })}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
