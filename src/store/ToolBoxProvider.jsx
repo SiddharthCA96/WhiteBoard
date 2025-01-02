@@ -9,15 +9,15 @@ const toolboxReducer = (state, action) => {
       newState[action.payload.tool].stroke = action.payload.stroke;
       return newState;
     }
-    case TOOLBOX_ACTIONS.CHANGE_FILL:{
-        const newState={...state};
-        newState[action.payload.tool].fill=action.payload.fill;
-        return newState;
+    case TOOLBOX_ACTIONS.CHANGE_FILL: {
+      const newState = { ...state };
+      newState[action.payload.tool].fill = action.payload.fill;
+      return newState;
     }
-    case TOOLBOX_ACTIONS.CHANGE_SIZE:{
-        const newState={...state};
-        newState[action.payload.tool].size=action.payload.size;
-        return newState;
+    case TOOLBOX_ACTIONS.CHANGE_SIZE: {
+      const newState = { ...state };
+      newState[action.payload.tool].size = action.payload.size;
+      return newState;
     }
     default:
       state;
@@ -26,6 +26,9 @@ const toolboxReducer = (state, action) => {
 
 //initial tool box state  (har ik tool ka ik object taaki yaad rhe ki uske liye last settings kya thi)
 const initialToolboxState = {
+  [TOOL_ITEMS.BRUSH]: {
+    stroke:COLORS.BLACK,
+  },
   [TOOL_ITEMS.LINE]: {
     stroke: COLORS.BLACK,
     size: 1,
@@ -63,32 +66,32 @@ const ToolBoxProvider = ({ children }) => {
     });
   };
   //function to handle the change in fill color
-  const changeFillHandler=(tool,fill)=>{
+  const changeFillHandler = (tool, fill) => {
     //dispatch the action to change fill color
     dispatchToolboxAction({
-        type:TOOLBOX_ACTIONS.CHANGE_FILL,
-        payload:{
-            tool,
-            fill,
-        }
-    })
-  }
+      type: TOOLBOX_ACTIONS.CHANGE_FILL,
+      payload: {
+        tool,
+        fill,
+      },
+    });
+  };
   //function to change the size of brush
-  const changeSizeHandler=(tool,size)=>{
+  const changeSizeHandler = (tool, size) => {
     //dispatch the actionn to change the brush size
     dispatchToolboxAction({
-        type:TOOLBOX_ACTIONS.CHANGE_SIZE,
-        payload:{
-            tool,
-            size,
-        }
-    })
-  }
+      type: TOOLBOX_ACTIONS.CHANGE_SIZE,
+      payload: {
+        tool,
+        size,
+      },
+    });
+  };
   const toolboxContextValue = {
     toolboxState,
     changeStroke: changeStrokeHandler,
-    changeFill:changeFillHandler,
-    changeSize:changeSizeHandler,
+    changeFill: changeFillHandler,
+    changeSize: changeSizeHandler,
   };
 
   return (
