@@ -5,7 +5,7 @@ import { getArrowHeadsCoordinates } from "./math";
 const gen = rough.generator();
 
 //function to generate new element of different type
-export const createRoughElement = (id, x1, y1, x2, y2, { type,stroke,fill }) => {
+export const createRoughElement = (id, x1, y1, x2, y2, { type,stroke,fill,size}) => {
   const element = {
     id,
     x1,
@@ -15,18 +15,23 @@ export const createRoughElement = (id, x1, y1, x2, y2, { type,stroke,fill }) => 
     type,
     fill,
     stroke,
+    size,
   };
   //set some setting for the creation of elements 
 
   let options={
     seed:id+1,//har baar nhi generate hoga newelement
     //id cant  be zero 
+    fillStyle:"solid",
   }
   if(stroke){
     options.stroke=stroke;
   }
   if(fill){
     options.fill=fill;
+  }
+  if(size){
+    options.strokeWidth=size;
   }
   switch (type) {
     case TOOL_ITEMS.LINE:{

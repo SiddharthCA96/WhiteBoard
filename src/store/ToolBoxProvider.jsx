@@ -14,6 +14,11 @@ const toolboxReducer = (state, action) => {
         newState[action.payload.tool].fill=action.payload.fill;
         return newState;
     }
+    case TOOLBOX_ACTIONS.CHANGE_SIZE:{
+        const newState={...state};
+        newState[action.payload.tool].size=action.payload.size;
+        return newState;
+    }
     default:
       state;
   }
@@ -68,10 +73,22 @@ const ToolBoxProvider = ({ children }) => {
         }
     })
   }
+  //function to change the size of brush
+  const changeSizeHandler=(tool,size)=>{
+    //dispatch the actionn to change the brush size
+    dispatchToolboxAction({
+        type:TOOLBOX_ACTIONS.CHANGE_SIZE,
+        payload:{
+            tool,
+            size,
+        }
+    })
+  }
   const toolboxContextValue = {
     toolboxState,
     changeStroke: changeStrokeHandler,
     changeFill:changeFillHandler,
+    changeSize:changeSizeHandler,
   };
 
   return (
