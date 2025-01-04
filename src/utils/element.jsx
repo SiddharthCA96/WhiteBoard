@@ -67,7 +67,7 @@ export const createRoughElement = (id, x1, y1, x2, y2, { type,stroke,fill,size})
             [x2,y2],
             [x3,y3],
             [x2,y2],
-            [x4,y4]
+            [x4,y4],
         ]
         element.roughEle=gen.linearPath(points,options);
         return element;
@@ -76,6 +76,10 @@ export const createRoughElement = (id, x1, y1, x2, y2, { type,stroke,fill,size})
         throw new Error("Type not recognised");
   }
 };
+
+export const isPointNearElement=(element,pointX,pointY)=>{
+  
+}
 export const getSvgPathFromStroke = (stroke) => {
   if (!stroke.length) return "";
 
