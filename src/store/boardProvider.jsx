@@ -2,7 +2,7 @@ import React, { useReducer } from "react";
 import { BOARD_ACTIONS, TOOL_ACTIONS_TYPES, TOOL_ITEMS } from "../../constants";
 import boardContext from "./board-context";
 import rough from "roughjs/bin/rough";
-import { createRoughElement, getSvgPathFromStroke } from "../utils/element";
+import { createElement, getSvgPathFromStroke } from "../utils/element";
 import { isPointNearElement } from "../utils/element";
 import getStroke from "perfect-freehand";
 const gen = rough.generator();
@@ -28,7 +28,7 @@ const boardReducer = (state, action) => {
       //get the payload
       const { clientX, clientY, stroke, fill, size } = action.payload;
       //create the new element
-      const newEle = createRoughElement(
+      const newEle = createElement(
         state.elements.length,
         clientX,
         clientY,
@@ -42,7 +42,10 @@ const boardReducer = (state, action) => {
         //updating the state
         ...state,
         //Declare the tool action type
-        toolActionType: TOOL_ACTIONS_TYPES.DRAWING,
+        toolActionType:
+          state.activeToolItem === TOOL_ITEMS.TEXT
+            ? TOOL_ACTIONS_TYPES.WRITING
+            : TOOL_ACTIONS_TYPES.DRAWING,
         //update the elements
         elements: [...prevElements, newEle],
       };
@@ -65,7 +68,7 @@ const boardReducer = (state, action) => {
         case TOOL_ITEMS.CIRCLE:
         case TOOL_ITEMS.ARROW:
           const { x1, y1, stroke, fill, size } = newElements[index];
-          const newElement = createRoughElement(
+          const newElement = createElement(
             index,
             x1,
             y1,
@@ -110,7 +113,7 @@ const boardReducer = (state, action) => {
       console.log("onside dra erase");
       const { clientX, clientY } = action.payload;
       let newElements = [...state.elements];
-     // console.log(newElements);
+      // console.log(newElements);
 
       newElements = newElements.filter((element) => {
         return !isPointNearElement(element, clientX, clientY);
@@ -122,6 +125,19 @@ const boardReducer = (state, action) => {
         elements: newElements,
       };
     }
+    case BOARD_ACTIONS.CHANGE_TEXT:{
+      console.log("bp ke text ke andr");
+      
+      const index=state.elements.length-1;
+      const newElements=[...state.elements];
+      newElements[index].text=action.payload.text;
+      return {
+        ...state,
+        //TEXTAREA GAYAB KRO
+        toolActionType:TOOL_ACTIONS_TYPES.NONE,
+        elements:newElements,
+      }
+    }
     default:
       return state;
   }
@@ -129,7 +145,7 @@ const boardReducer = (state, action) => {
 
 //initial state of the board
 const initialBoardState = {
-  activeToolItem: TOOL_ITEMS.LINE,
+  activeToolItem: TOOL_ITEMS.BRUSH,
   toolActionType: TOOL_ACTIONS_TYPES.NONE,
   elements: [],
 };
@@ -142,12 +158,13 @@ const BoardProvider = ({ children }) => {
   //to set the elements (state of the element)
 
   const boardMouseDownHandler = (event, toolboxState) => {
+    if(boardState.toolActionType===TOOL_ACTIONS_TYPES.WRITING)return; 
     const { clientX, clientY } = event;
     //dispatch th action to change the state of the elements
 
     //JAB PHLI BAAR ERASER TOUCH KARA TO YE
     if (boardState.activeToolItem === TOOL_ITEMS.ERASER) {
-      console.log("1");      
+      console.log("1");
       dispatchBoardAction({
         type: BOARD_ACTIONS.CHANGE_ACTION_TYPE,
         payload: {
@@ -169,10 +186,11 @@ const BoardProvider = ({ children }) => {
   };
 
   const boardMouseMoveHandler = (event) => {
+    if(boardState.toolActionType===TOOL_ACTIONS_TYPES.WRITING)return;
     const { clientX, clientY } = event;
     //dispatch th action to change the state of the elements
     //console.log(boardState.toolActionType);
-    
+
     if (boardState.toolActionType === TOOL_ACTIONS_TYPES.DRAWING) {
       dispatchBoardAction({
         type: BOARD_ACTIONS.DRAW_MOVE,
@@ -194,11 +212,12 @@ const BoardProvider = ({ children }) => {
 
   //just change the toolaction type to none
   const boardMouseUpHandler = () => {
+    if(boardState.toolActionType===TOOL_ACTIONS_TYPES.WRITING)return; 
     //dispatch th action to change the state of the elements
-    if(boardState.toolActionType===TOOL_ACTIONS_TYPES.DRAWING){
+    if (boardState.toolActionType === TOOL_ACTIONS_TYPES.DRAWING) {
       dispatchBoardAction({
-        type:BOARD_ACTIONS.DRAW_UP,
-      })
+        type: BOARD_ACTIONS.DRAW_UP,
+      });
     }
     dispatchBoardAction({
       type: BOARD_ACTIONS.CHANGE_ACTION_TYPE,
@@ -207,6 +226,19 @@ const BoardProvider = ({ children }) => {
       },
     });
   };
+
+  const textAreaBlurHandler=(text,toolboxState)=>{
+    console.log("Blur handler:", { text, toolboxState });
+
+     dispatchBoardAction({
+      type:BOARD_ACTIONS.CHANGE_TEXT,
+      payload:{
+        text,
+        stroke:toolboxState[boardState.activeToolItem]?.stroke,
+        size:toolboxState[boardState.activeToolItem]?.size,
+      }
+     })
+  }
 
   const handleToolItemClick = (tool) => {
     //console.log(tool);
@@ -227,6 +259,7 @@ const BoardProvider = ({ children }) => {
     boardMouseDownHandler,
     boardMouseMoveHandler,
     boardMouseUpHandler,
+    textAreaBlurHandler,
   };
 
   return (

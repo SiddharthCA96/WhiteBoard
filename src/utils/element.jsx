@@ -6,7 +6,7 @@ const gen = rough.generator();
 import { isPointCloseToLine } from "./math";
 
 //function to generate new element of different type
-export const createRoughElement = (
+export const createElement = (
   id,
   x1,
   y1,
@@ -84,6 +84,11 @@ export const createRoughElement = (
         [x4, y4],
       ];
       element.roughEle = gen.linearPath(points, options);
+      return element;
+    }
+    case TOOL_ITEMS.TEXT:{
+      //start me empty text rhega n
+      element.text="";
       return element;
     }
     default:
