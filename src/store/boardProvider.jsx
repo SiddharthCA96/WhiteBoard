@@ -3,6 +3,7 @@ import { BOARD_ACTIONS, TOOL_ACTIONS_TYPES, TOOL_ITEMS } from "../../constants";
 import boardContext from "./board-context";
 import rough from "roughjs/bin/rough";
 import { createRoughElement, getSvgPathFromStroke } from "../utils/element";
+import { isPointNearElement } from "../utils/element";
 import getStroke from "perfect-freehand";
 const gen = rough.generator();
 
@@ -10,6 +11,8 @@ const gen = rough.generator();
 const boardReducer = (state, action) => {
   switch (action.type) {
     case BOARD_ACTIONS.CHANGE_TOOL: {
+      console.log("2");
+
       return {
         ...state,
         activeToolItem: action.payload.tool,
@@ -45,6 +48,8 @@ const boardReducer = (state, action) => {
       };
     }
     case BOARD_ACTIONS.DRAW_MOVE: {
+      // console.log("onside dra move");
+
       //get the payload
       const { clientX, clientY } = action.payload;
 
@@ -102,11 +107,16 @@ const boardReducer = (state, action) => {
       };
     }
     case BOARD_ACTIONS.ERASE: {
+      console.log("onside dra erase");
       const { clientX, clientY } = action.payload;
       let newElements = [...state.elements];
+     // console.log(newElements);
+
       newElements = newElements.filter((element) => {
         return !isPointNearElement(element, clientX, clientY);
       });
+      //console.log("elements after erse: ", newElements);
+
       return {
         ...state,
         elements: newElements,
@@ -135,7 +145,9 @@ const BoardProvider = ({ children }) => {
     const { clientX, clientY } = event;
     //dispatch th action to change the state of the elements
 
+    //JAB PHLI BAAR ERASER TOUCH KARA TO YE
     if (boardState.activeToolItem === TOOL_ITEMS.ERASER) {
+      console.log("1");      
       dispatchBoardAction({
         type: BOARD_ACTIONS.CHANGE_ACTION_TYPE,
         payload: {
@@ -159,6 +171,8 @@ const BoardProvider = ({ children }) => {
   const boardMouseMoveHandler = (event) => {
     const { clientX, clientY } = event;
     //dispatch th action to change the state of the elements
+    //console.log(boardState.toolActionType);
+    
     if (boardState.toolActionType === TOOL_ACTIONS_TYPES.DRAWING) {
       dispatchBoardAction({
         type: BOARD_ACTIONS.DRAW_MOVE,
@@ -181,6 +195,11 @@ const BoardProvider = ({ children }) => {
   //just change the toolaction type to none
   const boardMouseUpHandler = () => {
     //dispatch th action to change the state of the elements
+    if(boardState.toolActionType===TOOL_ACTIONS_TYPES.DRAWING){
+      dispatchBoardAction({
+        type:BOARD_ACTIONS.DRAW_UP,
+      })
+    }
     dispatchBoardAction({
       type: BOARD_ACTIONS.CHANGE_ACTION_TYPE,
       payload: {

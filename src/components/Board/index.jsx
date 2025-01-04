@@ -10,7 +10,6 @@ function Board() {
     boardMouseDownHandler,
     boardMouseMoveHandler,
     boardMouseUpHandler,
-    toolActionType,
   } = useContext(boardContext);
 
   //get the toolboxstate to use it
@@ -28,6 +27,7 @@ function Board() {
   useLayoutEffect(() => {
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
+    context.save();
     const roughCanvas = rough.canvas(canvas);
 
     // Clear canvas
@@ -62,11 +62,12 @@ function Board() {
   };
   const handleMouseMove = (event) => {
     //JAB IK BAAR START HO CHUKA HAI TAB HI KARO YE
-    if (toolActionType == TOOL_ACTIONS_TYPES.DRAWING) {
-      console.log("move ke andar");
+    boardMouseMoveHandler(event);
+    // if (toolActionType == TOOL_ACTIONS_TYPES.DRAWING) {
+    //   console.log("move ke andar");
 
-      boardMouseMoveHandler(event);
-    }
+    //   boardMouseMoveHandler(event);
+    // }
   };
 
   const handleMouseUp = () => {
@@ -76,6 +77,7 @@ function Board() {
   return (
     <canvas
       ref={canvasRef}
+      id="canvas"
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
