@@ -1,11 +1,10 @@
 import React, { useCallback, useReducer } from "react";
 import { BOARD_ACTIONS, TOOL_ACTIONS_TYPES, TOOL_ITEMS } from "../../constants";
 import boardContext from "./board-context";
-import rough from "roughjs/bin/rough";
 import { createElement, getSvgPathFromStroke } from "../utils/element";
 import { isPointNearElement } from "../utils/element";
 import getStroke from "perfect-freehand";
-const gen = rough.generator();
+
 
 //board reducer
 const boardReducer = (state, action) => {
