@@ -14,6 +14,8 @@ function Board() {
     boardMouseMoveHandler,
     boardMouseUpHandler,
     textAreaBlurHandler,
+    boardUndoHandler,
+    boardRedoHandler,
   } = useContext(boardContext);
 
   //get the toolboxstate to use it
@@ -24,8 +26,6 @@ function Board() {
     // Ensure the canvas is properly sized
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-
-    // console.log('Shapes drawn');
   }, []);
 
   useLayoutEffect(() => {
@@ -54,7 +54,6 @@ function Board() {
           break;
         }
         case TOOL_ITEMS.TEXT: {
-          //console.log("Rendering element:", element);
           context.textBaseline = "top";
           context.font = `${element.size}px Caveat`;
           context.fillStyle = element.stroke;
@@ -78,6 +77,23 @@ function Board() {
     }
   }, [toolActionType]);
 
+  //for keyboard shortcut for undo and redo handler
+  useEffect(()=>{
+    function handleKeyDown(event){
+      if(event.ctrlKey&&event.key==="z"){
+        boardUndoHandler();
+      }
+      else if(event.ctrlKey&&event.key==="y"){
+        boardRedoHandler();
+      }
+    }
+    document.addEventListener("keydown",handleKeyDown);
+
+    //unmount the event listner
+    return()=>{
+      document.removeEventListener("keydown",handleKeyDown);
+    }
+  },[boardRedoHandler,boardUndoHandler])
   const handleMouseDown = (event) => {
     const { clientX, clientY } = event;
     //calling the fcn responsible
@@ -87,11 +103,7 @@ function Board() {
   const handleMouseMove = (event) => {
     //JAB IK BAAR START HO CHUKA HAI TAB HI KARO YE
     boardMouseMoveHandler(event);
-    // if (toolActionType == TOOL_ACTIONS_TYPES.DRAWING) {
-    //   console.log("move ke andar");
 
-    //   boardMouseMoveHandler(event);
-    // }
   };
 
   const handleMouseUp = () => {

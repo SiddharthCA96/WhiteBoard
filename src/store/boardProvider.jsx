@@ -1,4 +1,4 @@
-import React, { useReducer } from "react";
+import React, { useCallback, useReducer } from "react";
 import { BOARD_ACTIONS, TOOL_ACTIONS_TYPES, TOOL_ITEMS } from "../../constants";
 import boardContext from "./board-context";
 import rough from "roughjs/bin/rough";
@@ -11,7 +11,6 @@ const gen = rough.generator();
 const boardReducer = (state, action) => {
   switch (action.type) {
     case BOARD_ACTIONS.CHANGE_TOOL: {
-      console.log("2");
 
       return {
         ...state,
@@ -51,7 +50,6 @@ const boardReducer = (state, action) => {
       };
     }
     case BOARD_ACTIONS.DRAW_MOVE: {
-      // console.log("onside dra move");
 
       //get the payload
       const { clientX, clientY } = action.payload;
@@ -108,17 +106,15 @@ const boardReducer = (state, action) => {
       };
     }
     case BOARD_ACTIONS.ERASE: { 
-      console.log("onside dra erase");
       const { clientX, clientY } = action.payload;
       let newElements = [...state.elements];
-      // console.log(newElements);
 
       newElements = newElements.filter((element) => {
         return !isPointNearElement(element, clientX, clientY);
       });
       const newHistory = state.history.slice(0, state.index + 1);
       newHistory.push(newElements);
-      //console.log("elements after erse: ", newElements);
+
 
       return {
         ...state,
@@ -144,7 +140,6 @@ const boardReducer = (state, action) => {
       };
     }
     case BOARD_ACTIONS.UNDO: {
-      console.log("undo");
 
       if (state.index <= 0) return state;
       return {
@@ -154,7 +149,6 @@ const boardReducer = (state, action) => {
       };
     }
     case BOARD_ACTIONS.REDO: {
-      console.log("redo");
       if (state.index >= state.history.length - 1) return state;
       return {
         ...state,
@@ -190,7 +184,6 @@ const BoardProvider = ({ children }) => {
 
     //JAB PHLI BAAR ERASER TOUCH KARA TO YE
     if (boardState.activeToolItem === TOOL_ITEMS.ERASER) {
-      console.log("1");
       dispatchBoardAction({
         type: BOARD_ACTIONS.CHANGE_ACTION_TYPE,
         payload: {
@@ -226,7 +219,7 @@ const BoardProvider = ({ children }) => {
         },
       });
     } else if (boardState.toolActionType === TOOL_ACTIONS_TYPES.ERASING) {
-      console.log("3");
+
 
       dispatchBoardAction({
         type: BOARD_ACTIONS.ERASE,
@@ -256,7 +249,6 @@ const BoardProvider = ({ children }) => {
   };
 
   const textAreaBlurHandler = (text, toolboxState) => {
-    console.log("Blur handler:", { text, toolboxState });
 
     dispatchBoardAction({
       type: BOARD_ACTIONS.CHANGE_TEXT,
@@ -269,7 +261,6 @@ const BoardProvider = ({ children }) => {
   };
 
   const handleToolItemClick = (tool) => {
-    //console.log(tool);
     dispatchBoardAction({
       type: "CHANGE_TOOL",
       payload: {
@@ -278,20 +269,17 @@ const BoardProvider = ({ children }) => {
     });
   };
   //UNDO HANDLER
-  const boardUndoHandler = () => {
-    console.log("undo handlwer");
-
+  const boardUndoHandler = useCallback(() => {
     dispatchBoardAction({
       type: BOARD_ACTIONS.UNDO,
     });
-  };
+  });
   //REDO HANDLER
-  const boardRedoHandler = () => {
-    console.log("redo handlwer");
+  const boardRedoHandler = useCallback(() => {
     dispatchBoardAction({
       type: BOARD_ACTIONS.REDO,
     });
-  };
+  });
   //OBJECT USED BY ALL CONSUMERS OF THIS CONTEXT
   const boardContextValue = {
     activeToolItem: boardState.activeToolItem,
