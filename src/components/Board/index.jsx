@@ -54,7 +54,7 @@ function Board() {
           break;
         }
         case TOOL_ITEMS.TEXT: {
-          console.log("Rendering element:", element);
+          //console.log("Rendering element:", element);
           context.textBaseline = "top";
           context.font = `${element.size}px Caveat`;
           context.fillStyle = element.stroke;

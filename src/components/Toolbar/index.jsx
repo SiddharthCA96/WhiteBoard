@@ -2,12 +2,22 @@ import React, { useContext } from "react";
 import classes from "./index.module.css";
 import cx from "classnames";
 import { LuRectangleHorizontal } from "react-icons/lu";
-import { FaSlash, FaRegCircle, FaArrowRight,FaPaintBrush,FaEraser,FaFont } from "react-icons/fa";
+import {
+  FaSlash,
+  FaRegCircle,
+  FaArrowRight,
+  FaPaintBrush,
+  FaEraser,
+  FaFont,
+  FaUndoAlt,
+  FaRedoAlt,
+} from "react-icons/fa";
 import boardContext from "../../store/board-context";
 import { TOOL_ITEMS } from "../../../constants";
 
 const ToolBar = () => {
-  const { activeToolItem, handleToolItemClick } = useContext(boardContext);
+  const { activeToolItem, handleToolItemClick,boardRedoHandler,boardUndoHandler} =
+    useContext(boardContext);
 
   return (
     <div className={classes.container}>
@@ -58,7 +68,17 @@ const ToolBar = () => {
           [classes.active]: activeToolItem === TOOL_ITEMS.TEXT,
         })}
         onClick={() => handleToolItemClick(TOOL_ITEMS.TEXT)}>
-        <FaFont/>
+        <FaFont />
+      </div>
+      <div
+        className={cx(classes.toolItem)}
+        onClick={() => boardUndoHandler()}>
+        <FaUndoAlt />
+      </div>
+      <div
+        className={cx(classes.toolItem)}
+        onClick={() => boardRedoHandler()}>
+        <FaRedoAlt />
       </div>
     </div>
   );
