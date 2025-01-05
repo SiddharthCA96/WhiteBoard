@@ -107,7 +107,7 @@ const boardReducer = (state, action) => {
         index: state.index + 1,
       };
     }
-    case BOARD_ACTIONS.ERASE: {
+    case BOARD_ACTIONS.ERASE: { 
       console.log("onside dra erase");
       const { clientX, clientY } = action.payload;
       let newElements = [...state.elements];

@@ -10,6 +10,7 @@ import {
   FaEraser,
   FaFont,
   FaUndoAlt,
+  FaDownload,
   FaRedoAlt,
 } from "react-icons/fa";
 import boardContext from "../../store/board-context";
@@ -19,6 +20,16 @@ const ToolBar = () => {
   const { activeToolItem, handleToolItemClick,boardRedoHandler,boardUndoHandler} =
     useContext(boardContext);
 
+
+    //canvas download handler
+    const downloadClickHandler=()=>{
+      const canvas=document.getElementById("canvas");
+      const data=canvas.toDataURL("image/png");
+      const anchor=document.createElement("a");
+      anchor.href=data;
+      anchor.download="board.png";
+      anchor.click(); 
+    }
   return (
     <div className={classes.container}>
       <div
@@ -79,6 +90,11 @@ const ToolBar = () => {
         className={cx(classes.toolItem)}
         onClick={() => boardRedoHandler()}>
         <FaRedoAlt />
+      </div>
+      <div
+        className={cx(classes.toolItem)}
+        onClick={() => downloadClickHandler()}>
+        <FaDownload />
       </div>
     </div>
   );
