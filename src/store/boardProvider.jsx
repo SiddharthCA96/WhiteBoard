@@ -207,7 +207,6 @@ const BoardProvider = ({ children }) => {
     if (boardState.toolActionType === TOOL_ACTIONS_TYPES.WRITING) return;
     const { clientX, clientY } = event;
     //dispatch th action to change the state of the elements
-    //console.log(boardState.toolActionType);
 
     if (boardState.toolActionType === TOOL_ACTIONS_TYPES.DRAWING) {
       dispatchBoardAction({

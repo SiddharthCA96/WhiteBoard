@@ -37,7 +37,6 @@ function Board() {
     // Clear canvas
     context.clearRect(0, 0, canvas.width, canvas.height);
 
-    console.log("Updated elements:", elements);
     // Draw elements
     elements.forEach((element) => {
       switch (element.type) {
@@ -98,7 +97,7 @@ function Board() {
     const { clientX, clientY } = event;
     //calling the fcn responsible
     boardMouseDownHandler(event, toolboxState);
-    console.log(clientX, clientY);
+
   };
   const handleMouseMove = (event) => {
     //JAB IK BAAR START HO CHUKA HAI TAB HI KARO YE
