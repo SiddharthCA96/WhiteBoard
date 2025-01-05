@@ -16,12 +16,13 @@ const ToolBox = () => {
   const { activeToolItem } = useContext(boardContext);
 
   // Get the active toolbox state
-  const { toolboxState, changeStroke, changeFill,changeSize } = useContext(toolboxContext);
+  const { toolboxState, changeStroke, changeFill, changeSize } =
+    useContext(toolboxContext);
 
   const strokeColor = toolboxState[activeToolItem]?.stroke;
   const fillColor = toolboxState[activeToolItem]?.fill;
 
-  const size=toolboxState[activeToolItem]?.size;
+  const size = toolboxState[activeToolItem]?.size;
   return (
     <div className={classes.container}>
       {/* Show the Stroke Color option only for stroke tools */}
@@ -29,6 +30,15 @@ const ToolBox = () => {
         <div className={classes.selectOptionContainer}>
           <div className={classes.toolBoxLabel}>Stroke Color</div>
           <div className={classes.colorsContainer}>
+            <div>
+              <input
+                className={classes.colorPicker}
+                type="color"
+                value={strokeColor}
+                onChange={(e) =>
+                  changeStroke(activeToolItem, e.target.value)
+                }></input>
+            </div>
             {Object.keys(COLORS).map((k) => {
               return (
                 <div
@@ -67,15 +77,18 @@ const ToolBox = () => {
 
       {SIZE_TOOL_TYPES.includes(activeToolItem) && (
         <div className={classes.selectOptionContainer}>
-          <div className={classes.toolBoxLabel}>{activeToolItem===TOOL_ITEMS.TEXT?"Font Size":"Brush SizeS"}</div>
+          <div className={classes.toolBoxLabel}>
+            {activeToolItem === TOOL_ITEMS.TEXT ? "Font Size" : "Brush SizeS"}
+          </div>
           <input
             type="range"
             step={1}
-            min={activeToolItem===TOOL_ITEMS.TEXT?16:1}
-            max={activeToolItem===TOOL_ITEMS.TEXT?38:10}
+            min={activeToolItem === TOOL_ITEMS.TEXT ? 16 : 1}
+            max={activeToolItem === TOOL_ITEMS.TEXT ? 38 : 10}
             value={size}
-            onChange={(event)=>changeSize(activeToolItem,event.target.value)}
-            ></input>
+            onChange={(event) =>
+              changeSize(activeToolItem, event.target.value)
+            }></input>
         </div>
       )}
     </div>
