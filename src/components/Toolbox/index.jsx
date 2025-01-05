@@ -59,6 +59,15 @@ const ToolBox = () => {
         <div className={classes.selectOptionContainer}>
           <div className={classes.toolBoxLabel}>Fill Color</div>
           <div className={classes.colorsContainer}>
+            <div>
+              <input
+                className={classes.colorPicker}
+                type="color"
+                value={fillColor}
+                onChange={(e) =>
+                  changeFill(activeToolItem, e.target.value)
+                }></input>
+            </div>
             {Object.keys(COLORS).map((k) => {
               return (
                 <div
