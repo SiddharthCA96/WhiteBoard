@@ -18,17 +18,6 @@ A real-time digital whiteboard built with React, TailwindCSS, and Rough.js. It s
 - 🎨 Rough.js — Hand-drawn-style shapes
 - ✍️ perfect-freehand — Smooth freehand drawing
 
-## 📸 Preview
-
-(Add a GIF or image here)  
-`![Whiteboard Preview](path-to-your-image-or-gif)`
-
-## 📦 Installation
-
-1. Clone the repo:
-   ```bash
-   git clone https://github.com/your-username/whiteboard-app.git
-   cd whiteboard-app
 
 ## Live Link
 
