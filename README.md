@@ -1,21 +1,35 @@
-# White Board
+# 🖌️ Real-Time Digital Whiteboard
 
-- Create vite@latest
-- Install prettier
-- Use canvas and Rough JS
-- Install rough js
-- Use Generator prop of rough js to human draw feel shape 
-- You can learn mode here https://github.com/rough-stuff/rough/wiki/RoughGenerator
-- Configure Tailwind
-- Install classnames (https://www.npmjs.com/package/classnames)
-- Install react-icons
-- Create the store
-- Setup the boardprovider and boeardcontext 
-- Connect the store and the fuction(usereducer)
-- Generate the functionality of the line tool
-- Implement the rectangle tool functionality
-- Implement the Circle tool functionality
-- Implement the Arrow tool functionality
-- Create the toolbox provider and its context
-- Create the toolbox component
-- 
+A real-time digital whiteboard built with React, TailwindCSS, and Rough.js. It supports freehand drawing, shape creation, and text annotations with a hand-drawn aesthetic.
+
+## 🚀 Features
+
+- ✏️ Freehand Drawing — Smooth lines using perfect-freehand.
+- 🟦 Shape Creation — Draw rectangles, circles, and more with Rough.js for a sketch-like style.
+- 📝 Text Annotations — Add and edit text directly on the board.
+- 🔄 Real-Time Updates — Changes reflect instantly across users (if integrated with WebSockets).
+- 🗑️ Erase & Clear — Easily erase or clear the entire board.
+- 💾 Save/Export — Save your work as an image.
+
+## 🛠️ Tech Stack
+
+- ⚛️ React — UI framework
+- 💨 TailwindCSS — Utility-first styling
+- 🎨 Rough.js — Hand-drawn-style shapes
+- ✍️ perfect-freehand — Smooth freehand drawing
+
+## 📸 Preview
+
+(Add a GIF or image here)  
+`![Whiteboard Preview](path-to-your-image-or-gif)`
+
+## 📦 Installation
+
+1. Clone the repo:
+   ```bash
+   git clone https://github.com/your-username/whiteboard-app.git
+   cd whiteboard-app
+
+## Live Link
+
+https://white-board-ll17.vercel.app/
