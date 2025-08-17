@@ -26,6 +26,11 @@ function Board() {
     // Ensure the canvas is properly sized
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+        const context = canvas.getContext("2d");
+    // Fill background with white at the start
+    context.fillStyle = "white";
+    context.fillRect(0, 0, canvas.width, canvas.height);
+
   }, []);
 
   useLayoutEffect(() => {
@@ -33,9 +38,17 @@ function Board() {
     const context = canvas.getContext("2d");
     context.save();
     const roughCanvas = rough.canvas(canvas);
+    // Fill with white background (light mode)
+    context.fillStyle = "white";
+    context.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Clear canvas
+    // Clear any old drawings (over white, not transparent)
     context.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Refill white again so export isn’t transparent
+    context.fillStyle = "white";
+    context.fillRect(0, 0, canvas.width, canvas.height);
+
 
     // Draw elements
     elements.forEach((element) => {
